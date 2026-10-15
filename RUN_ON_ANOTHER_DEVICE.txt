@@ -1,0 +1,97 @@
+ONLINE JOB PORTAL — SETUP ON ANOTHER DEVICE
+================================================
+
+This guide explains how to run the project on a new Windows laptop. Each laptop needs its own Java, Maven, VS Code, and MySQL setup. The project does not contain a MySQL password.
+
+WHAT TO INSTALL
+---------------
+1. Java Development Kit (JDK) 17 or newer.
+2. Visual Studio Code.
+3. The "Extension Pack for Java" in VS Code.
+4. Apache Maven 3.9 or newer.
+5. MySQL Server 8.0 or newer, plus MySQL Workbench (recommended for importing the database).
+
+Download software from its official website. After installing Java and Maven, open a NEW PowerShell terminal and check:
+
+    java -version
+    mvn -v
+
+Both commands should display version information. If `mvn` is not recognized, close and reopen VS Code. If it is still not recognized, Maven's `bin` folder must be added to Windows PATH.
+
+COPY AND EXTRACT THE PROJECT
+----------------------------
+1. Copy OnlineJobPortal.zip to the new laptop using a USB drive or a file-sharing service.
+2. Right-click the ZIP file and choose Extract All.
+3. Open the extracted OnlineJobPortal folder. It must contain pom.xml, README.md, database, and src.
+4. In VS Code, choose File > Open Folder and select that OnlineJobPortal folder.
+5. If VS Code asks to import the Maven project, choose Yes and allow dependencies to download.
+
+CREATE THE LOCAL DATABASE
+-------------------------
+1. Start the MySQL Server service.
+2. Open MySQL Workbench and connect to the local MySQL server.
+3. Choose File > Open SQL Script and open:
+
+       database/job_portal.sql
+
+4. Select the entire script (Ctrl+A), then click the lightning-bolt Execute button.
+5. Refresh Schemas. Expand job_portal, then Tables. Tables such as users, jobs, and applications should be listed.
+
+CONFIGURE THIS LAPTOP'S MYSQL CREDENTIALS
+-----------------------------------------
+The app defaults to username root with a blank password. If this laptop's MySQL account has a password, configure it in Windows. Do not put the password in the shared project files.
+
+1. Search Windows for "Edit environment variables for your account" and open it.
+2. In User variables, click New and enter:
+
+       Variable name:  JOBPORTAL_DB_USER
+       Variable value: root
+
+   Use the actual MySQL username if it is not root.
+3. Click New again and enter:
+
+       Variable name:  JOBPORTAL_DB_PASSWORD
+       Variable value: this laptop's MySQL password
+
+4. Click OK to save and close the dialogs.
+5. Close all VS Code windows and reopen VS Code so it receives the new variables.
+
+RUN THE APPLICATION
+-------------------
+1. In VS Code, open Run and Debug from the left sidebar.
+2. Select "Launch Online Job Portal" in the run-configuration list.
+3. Click the green Start button.
+4. Sign in using one of the demo application accounts below.
+
+DEMO APPLICATION SIGN-INS
+-------------------------
+Admin:      admin@jobportal.com       / admin123
+Employer:   employer@techcorp.com    / employer123
+Job Seeker: seeker@gmail.com         / seeker123
+
+These are portal sign-in credentials, not MySQL credentials. They are sample accounts for the locally imported database.
+
+TROUBLESHOOTING
+---------------
+
+"mvn is not recognized"
+    Maven is not installed or its bin folder is not on PATH. Restart VS Code first. If that does not help, install Maven or add its bin folder to PATH, then open a new terminal and run mvn -v.
+
+"Could not find or load main class Main" or "wrong name: portal/Main"
+    Open the OnlineJobPortal folder (the one containing pom.xml) and launch the saved "Launch Online Job Portal" configuration. Do not use a generic "Run Code" command; the Java class is portal.Main.
+
+Database operation failed / cannot sign in
+    Confirm that MySQL Server is running, the job_portal schema and its tables exist, and this laptop's JOBPORTAL_DB_USER / JOBPORTAL_DB_PASSWORD values are correct. Restart VS Code after changing environment variables. For diagnostic details, open View > Debug Console and look for a line beginning "Database diagnostic:".
+
+Invalid credentials
+    Check that you are using one of the portal demo sign-ins above and that the sample users were inserted when the SQL script ran.
+
+PROJECT FILES
+-------------
+database/job_portal.sql                         Database schema and sample records
+src/main/java/portal/Main.java                  Java Swing application
+.vscode/launch.json                             VS Code launch configuration
+pom.xml                                         Maven dependencies and build configuration
+README.md                                       Project overview and additional notes
+
+For additional project details, see README.md.
